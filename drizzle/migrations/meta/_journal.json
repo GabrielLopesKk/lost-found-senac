@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1795563355257,
+      "tag": "0000_lost_and_found_schema",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[
+ {"capability":"code","source":"Vite + React Router SPA","outcome":"port to TanStack routes","status":"in_progress","next_action":"port pages"},
+ {"capability":"schema","source":"supabase/schema.sql","outcome":"migrate","status":"in_progress","next_action":"apply migration in Lovable Cloud"},
+ {"capability":"records","source":"Supabase project (no export in ZIP)","outcome":"migrate","status":"pending","next_action":"user exports tables as CSV"},
+ {"capability":"auth identities","source":"Supabase Auth","outcome":"migrate","status":"pending","next_action":"user exports users list"},
+ {"capability":"authorization","source":"RLS + profiles.role staff","outcome":"migrate","status":"in_progress","next_action":"apply policies"},
+ {"capability":"file storage","source":"Supabase storage bucket","outcome":"migrate","status":"in_progress","next_action":"create bucket; file bytes pending export"},
+ {"capability":"verification","source":"-","outcome":"verify","status":"pending","next_action":"test flows"}
+]

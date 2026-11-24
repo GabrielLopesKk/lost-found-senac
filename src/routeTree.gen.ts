@@ -10,33 +10,180 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AcheiRouteImport } from './routes/achei'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as EntrarRouteImport } from './routes/entrar'
+import { Route as MinhaContaRouteImport } from './routes/minha-conta'
+import { Route as PerdiRouteImport } from './routes/perdi'
+import { Route as ProcurarRouteImport } from './routes/procurar'
+import { Route as RecuperarSenhaRouteImport } from './routes/recuperar-senha'
+import { Route as RedefinirSenhaRouteImport } from './routes/redefinir-senha'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as ObjetoIdRouteImport } from './routes/objeto.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AcheiRoute = AcheiRouteImport.update({
+  id: '/achei',
+  path: '/achei',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EntrarRoute = EntrarRouteImport.update({
+  id: '/entrar',
+  path: '/entrar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MinhaContaRoute = MinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PerdiRoute = PerdiRouteImport.update({
+  id: '/perdi',
+  path: '/perdi',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProcurarRoute = ProcurarRouteImport.update({
+  id: '/procurar',
+  path: '/procurar',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RecuperarSenhaRoute = RecuperarSenhaRouteImport.update({
+  id: '/recuperar-senha',
+  path: '/recuperar-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RedefinirSenhaRoute = RedefinirSenhaRouteImport.update({
+  id: '/redefinir-senha',
+  path: '/redefinir-senha',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ObjetoIdRoute = ObjetoIdRouteImport.update({
+  id: '/objeto/$id',
+  path: '/objeto/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/achei': typeof AcheiRoute
+  '/admin': typeof AdminRoute
+  '/cadastro': typeof CadastroRoute
+  '/entrar': typeof EntrarRoute
+  '/minha-conta': typeof MinhaContaRoute
+  '/perdi': typeof PerdiRoute
+  '/procurar': typeof ProcurarRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/objeto/$id': typeof ObjetoIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/achei': typeof AcheiRoute
+  '/admin': typeof AdminRoute
+  '/cadastro': typeof CadastroRoute
+  '/entrar': typeof EntrarRoute
+  '/minha-conta': typeof MinhaContaRoute
+  '/perdi': typeof PerdiRoute
+  '/procurar': typeof ProcurarRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/objeto/$id': typeof ObjetoIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/achei': typeof AcheiRoute
+  '/admin': typeof AdminRoute
+  '/cadastro': typeof CadastroRoute
+  '/entrar': typeof EntrarRoute
+  '/minha-conta': typeof MinhaContaRoute
+  '/perdi': typeof PerdiRoute
+  '/procurar': typeof ProcurarRoute
+  '/recuperar-senha': typeof RecuperarSenhaRoute
+  '/redefinir-senha': typeof RedefinirSenhaRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/objeto/$id': typeof ObjetoIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/achei'
+    | '/admin'
+    | '/cadastro'
+    | '/entrar'
+    | '/minha-conta'
+    | '/perdi'
+    | '/procurar'
+    | '/recuperar-senha'
+    | '/redefinir-senha'
+    | '/auth/callback'
+    | '/objeto/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/achei'
+    | '/admin'
+    | '/cadastro'
+    | '/entrar'
+    | '/minha-conta'
+    | '/perdi'
+    | '/procurar'
+    | '/recuperar-senha'
+    | '/redefinir-senha'
+    | '/auth/callback'
+    | '/objeto/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/achei'
+    | '/admin'
+    | '/cadastro'
+    | '/entrar'
+    | '/minha-conta'
+    | '/perdi'
+    | '/procurar'
+    | '/recuperar-senha'
+    | '/redefinir-senha'
+    | '/auth/callback'
+    | '/objeto/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AcheiRoute: typeof AcheiRoute
+  AdminRoute: typeof AdminRoute
+  CadastroRoute: typeof CadastroRoute
+  EntrarRoute: typeof EntrarRoute
+  MinhaContaRoute: typeof MinhaContaRoute
+  PerdiRoute: typeof PerdiRoute
+  ProcurarRoute: typeof ProcurarRoute
+  RecuperarSenhaRoute: typeof RecuperarSenhaRoute
+  RedefinirSenhaRoute: typeof RedefinirSenhaRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  ObjetoIdRoute: typeof ObjetoIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +195,99 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/achei': {
+      id: '/achei'
+      path: '/achei'
+      fullPath: '/achei'
+      preLoaderRoute: typeof AcheiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/entrar': {
+      id: '/entrar'
+      path: '/entrar'
+      fullPath: '/entrar'
+      preLoaderRoute: typeof EntrarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/minha-conta': {
+      id: '/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof MinhaContaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/perdi': {
+      id: '/perdi'
+      path: '/perdi'
+      fullPath: '/perdi'
+      preLoaderRoute: typeof PerdiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/procurar': {
+      id: '/procurar'
+      path: '/procurar'
+      fullPath: '/procurar'
+      preLoaderRoute: typeof ProcurarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/recuperar-senha': {
+      id: '/recuperar-senha'
+      path: '/recuperar-senha'
+      fullPath: '/recuperar-senha'
+      preLoaderRoute: typeof RecuperarSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/redefinir-senha': {
+      id: '/redefinir-senha'
+      path: '/redefinir-senha'
+      fullPath: '/redefinir-senha'
+      preLoaderRoute: typeof RedefinirSenhaRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/objeto/$id': {
+      id: '/objeto/$id'
+      path: '/objeto/$id'
+      fullPath: '/objeto/$id'
+      preLoaderRoute: typeof ObjetoIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AcheiRoute: AcheiRoute,
+  AdminRoute: AdminRoute,
+  CadastroRoute: CadastroRoute,
+  EntrarRoute: EntrarRoute,
+  MinhaContaRoute: MinhaContaRoute,
+  PerdiRoute: PerdiRoute,
+  ProcurarRoute: ProcurarRoute,
+  RecuperarSenhaRoute: RecuperarSenhaRoute,
+  RedefinirSenhaRoute: RedefinirSenhaRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+  ObjetoIdRoute: ObjetoIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
