@@ -31,3 +31,4 @@ use the editor.
 
 - Ported v0 app lives in `src/app/` (pages/components as `// @ts-nocheck` TSX) and uses `src/app/lib/router-compat.tsx` for react-router-style APIs on TanStack Router; route files in `src/routes/` only wrap pages. Why: keeps the migrated code close to source.
 - Staff permission comes from `public.user_roles` via `is_staff()`, never from profile columns. Why: prevents privilege escalation.
+- Photo AI analysis runs in `src/app/ai/photo.functions.ts` (createServerFn + AI Gateway) with local color-analyzer fallback in `src/app/lib/analyzePhoto.tsx`; never place client-imported server fns under a `server/` folder (import protection blocks it).

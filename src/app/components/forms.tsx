@@ -2,7 +2,8 @@
 import { useId, useState } from 'react'
 import { ImagePlus, LoaderCircle, Trash2, Sparkles } from 'lucide-react'
 import { CATEGORIES, COLORS, LOCATIONS } from '../data/constants'
-import { reencodeImage, analyzeLocally } from '../lib/imageTools'
+import { reencodeImage } from '../lib/imageTools'
+import { analyzePhotoSmart } from '../lib/analyzePhoto'
 import { Field } from './ui'
 
 export const todayISO = () => new Date().toLocaleDateString('sv-SE')
@@ -92,7 +93,7 @@ export function PhotoPicker({ value, onChange, onAnalyzed, hint }) {
       const { dataUrl } = await reencodeImage(file)
       onChange(dataUrl)
       if (onAnalyzed) {
-        try { onAnalyzed(await analyzeLocally(dataUrl, file.name)) } catch { /* sugestões são opcionais */ }
+        try { onAnalyzed(await analyzePhotoSmart(dataUrl, file.name)) } catch { /* sugestões são opcionais */ }
       }
     } catch (err) {
       setError(err.message)

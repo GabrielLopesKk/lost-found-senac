@@ -2,7 +2,9 @@
 import { useEffect, useState } from 'react'
 import { Link, useSearchParams } from '@/app/lib/router-compat'
 import useSWR from 'swr'
-import { Search as SearchIcon, SlidersHorizontal, RotateCcw, PackageSearch } from 'lucide-react'
+import { Search as SearchIcon, SlidersHorizontal, RotateCcw, PackageSearch, Camera, Sparkles } from 'lucide-react'
+import { reencodeImage } from '../lib/imageTools'
+import { analyzePhotoSmart } from '../lib/analyzePhoto'
 import { listPublicItems } from '../data/api'
 import { CATEGORIES, COLORS, LOCATIONS, AUTO_HIDE_DAYS } from '../data/constants'
 import { ItemCard } from '../components/ItemBits'
@@ -15,6 +17,30 @@ export default function Search() {
   const filters = Object.fromEntries(Object.entries(PARAMS).map(([k, p]) => [k, params.get(p) || '']))
   const [text, setText] = useState(filters.q)
   const [showFilters, setShowFilters] = useState(false)
+  const [photoBusy, setPhotoBusy] = useState(false)
+  const [photoInfo, setPhotoInfo] = useState(null)
+
+  async function searchByPhoto(e) {
+    const file = e.target.files?.[0]
+    e.target.value = ''
+    if (!file) return
+    setPhotoBusy(true)
+    setPhotoInfo(null)
+    try {
+      const { dataUrl } = await reencodeImage(file)
+      const a = await analyzePhotoSmart(dataUrl, file.name)
+      const next = new URLSearchParams()
+      if (a.category && a.category !== 'outros') next.set(PARAMS.category, a.category)
+      if (a.color) next.set(PARAMS.color, a.color)
+      setText('')
+      setParams(next, { replace: true })
+      setPhotoInfo({ preview: dataUrl, ...a })
+    } catch (err) {
+      setPhotoInfo({ error: err.message || 'Não foi possível ler a foto.' })
+    } finally {
+      setPhotoBusy(false)
+    }
+  }
 
   const setFilter = (key, value) => {
     const next = new URLSearchParams(params)
@@ -33,7 +59,7 @@ export default function Search() {
   const error = loadError ? 'Não foi possível carregar os objetos. Tente novamente.' : ''
 
   const activeCount = ['category', 'color', 'location', 'from', 'to'].filter((k) => filters[k]).length
-  const clear = () => { setText(''); setParams({}, { replace: true }) }
+  const clear = () => { setText(''); setPhotoInfo(null); setParams({}, { replace: true }) }
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
@@ -48,6 +74,10 @@ export default function Search() {
           <SearchIcon className="size-5 text-muted" />
           <span className="sr-only">Palavras-chave</span>
           <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Nome, descrição ou detalhe (ex.: adesivo, iniciais)" className="w-full bg-transparent py-3.5 focus:outline-none" />
+        </label>
+        <label className={`card inline-flex cursor-pointer items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-navy-900 ${photoBusy ? 'opacity-60' : ''}`}>
+          <Camera className="size-4" /> {photoBusy ? 'Analisando foto…' : 'Buscar por foto'}
+          <input type="file" accept="image/jpeg,image/png,image/webp" className="sr-only" disabled={photoBusy} onChange={searchByPhoto} />
         </label>
         <button onClick={() => setShowFilters((s) => !s)} className="card inline-flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold text-navy-900 lg:hidden">
           <SlidersHorizontal className="size-4" /> Filtros {activeCount > 0 && <span className="chip bg-flame-500 text-white">{activeCount}</span>}
@@ -96,6 +126,23 @@ export default function Search() {
         </aside>
 
         <section aria-live="polite">
+          {photoInfo && (
+            <div className="card mb-5 flex items-start gap-4 p-4">
+              {photoInfo.preview && <img src={photoInfo.preview} alt="Foto enviada" className="size-16 rounded-xl object-cover" />}
+              <div className="text-sm">
+                {photoInfo.error ? <p className="text-red-600">{photoInfo.error}</p> : (
+                  <>
+                    <p className="flex items-center gap-1.5 font-semibold text-navy-900"><Sparkles className="size-4 text-flame-500" /> Filtros aplicados a partir da foto</p>
+                    <p className="mt-1 text-muted">
+                      {CATEGORIES.find((c) => c.id === photoInfo.category)?.label || 'Categoria indefinida'} · {COLORS.find((c) => c.id === photoInfo.color)?.label || 'cor indefinida'}
+                      {photoInfo.marks?.length ? ` · ${photoInfo.marks.join(', ')}` : ''}
+                    </p>
+                    <p className="mt-1 text-xs text-muted">{photoInfo.source === 'ai' ? 'Analisado por IA.' : 'Análise local (cor estimada).'} Ajuste os filtros se necessário.</p>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
           {error ? <EmptyState icon={PackageSearch} title="Algo deu errado">{error}</EmptyState>
             : !items ? <Spinner label="Buscando objetos…" />
             : items.length === 0 ? (
