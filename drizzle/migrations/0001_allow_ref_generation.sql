@@ -1,0 +1,1 @@
+grant execute on function public.gen_ref(text, int) to authenticated;

@@ -28,3 +28,6 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+- Ported v0 app lives in `src/app/` (pages/components as `// @ts-nocheck` TSX) and uses `src/app/lib/router-compat.tsx` for react-router-style APIs on TanStack Router; route files in `src/routes/` only wrap pages. Why: keeps the migrated code close to source.
+- Staff permission comes from `public.user_roles` via `is_staff()`, never from profile columns. Why: prevents privilege escalation.

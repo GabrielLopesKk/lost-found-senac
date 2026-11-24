@@ -1,9 +1,9 @@
 [
- {"capability":"code","source":"Vite + React Router SPA","outcome":"port to TanStack routes","status":"in_progress","next_action":"port pages"},
- {"capability":"schema","source":"supabase/schema.sql","outcome":"migrate","status":"in_progress","next_action":"apply migration in Lovable Cloud"},
- {"capability":"records","source":"Supabase project (no export in ZIP)","outcome":"migrate","status":"pending","next_action":"user exports tables as CSV"},
- {"capability":"auth identities","source":"Supabase Auth","outcome":"migrate","status":"pending","next_action":"user exports users list"},
- {"capability":"authorization","source":"RLS + profiles.role staff","outcome":"migrate","status":"in_progress","next_action":"apply policies"},
- {"capability":"file storage","source":"Supabase storage bucket","outcome":"migrate","status":"in_progress","next_action":"create bucket; file bytes pending export"},
- {"capability":"verification","source":"-","outcome":"verify","status":"pending","next_action":"test flows"}
+ {"capability":"code","source":"Vite + React Router SPA","outcome":"ported to TanStack routes via src/app + router-compat","status":"verified","next_action":"none"},
+ {"capability":"schema","source":"supabase/schema.sql","outcome":"migrated to Lovable Cloud","status":"verified","next_action":"none"},
+ {"capability":"authorization","source":"RLS + profiles.role","outcome":"RLS kept; staff role moved to user_roles","status":"verified","next_action":"promote staff by inserting into user_roles"},
+ {"capability":"file storage","source":"item-photos bucket","outcome":"private bucket + policies recreated","status":"migrated","next_action":"photo files need export"},
+ {"capability":"records","source":"old database (no export in ZIP)","outcome":"migrate","status":"pending","next_action":"user exports items, lost_reports, claims as CSV"},
+ {"capability":"auth identities","source":"old auth users","outcome":"migrate with first-login email verification + new password","status":"pending","next_action":"user exports users (id, email, name) and staff list"},
+ {"capability":"verification","source":"-","outcome":"signed-in lost report created and read back","status":"partial","next_action":"verify imported-user login after export"}
 ]

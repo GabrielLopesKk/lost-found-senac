@@ -8,6 +8,13 @@
       "when": 1795563355257,
       "tag": "0000_lost_and_found_schema",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1795563687482,
+      "tag": "0001_allow_ref_generation",
+      "breakpoints": true
     }
   ]
 }
