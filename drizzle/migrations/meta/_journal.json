@@ -15,6 +15,13 @@
       "when": 1795563687482,
       "tag": "0001_allow_ref_generation",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1795646038730,
+      "tag": "0002_repair_withdrawal_code_validation",
+      "breakpoints": true
     }
   ]
 }

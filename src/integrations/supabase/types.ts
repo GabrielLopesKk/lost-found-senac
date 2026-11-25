@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       claims: {
         Row: {
+          code_expires_at: string | null
           code_hash: string | null
           code_issued_at: string | null
           code_used: boolean
@@ -34,6 +35,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          code_expires_at?: string | null
           code_hash?: string | null
           code_issued_at?: string | null
           code_used?: boolean
@@ -52,6 +54,7 @@ export type Database = {
           user_id?: string
         }
         Update: {
+          code_expires_at?: string | null
           code_hash?: string | null
           code_issued_at?: string | null
           code_used?: boolean

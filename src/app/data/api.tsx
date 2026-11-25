@@ -347,7 +347,12 @@ export async function rejectClaim(claimId) {
 
 /** Valida o código apresentado na recepção. Uso único: o objeto vira "Devolvido". */
 export async function validatePickupCode(input) {
-  const { data, error } = await supabase.rpc('validate_pickup_code', { p_code: input || '' })
+  const code = (input || '').trim().toUpperCase().replace(/[\s-]/g, '')
+  if (!/^[A-Z0-9]{8}$/.test(code)) throw new Error('O código deve ter 8 letras ou números (ex.: K7QM-4XPA).')
+  const { data, error } = await supabase.rpc('validate_pickup_code', { p_code: code })
   check(error, 'Não foi possível validar o código.')
+  if (!data || typeof data.itemRef !== 'string' || typeof data.itemName !== 'string' || typeof data.claimant !== 'string') {
+    throw new Error('Não foi possível confirmar o resultado. Confira o status do objeto antes de tentar novamente.')
+  }
   return data
 }
