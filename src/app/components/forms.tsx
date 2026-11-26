@@ -7,6 +7,16 @@ import { analyzePhotoSmart } from '../lib/analyzePhoto'
 import { Field } from './ui'
 
 export const todayISO = () => new Date().toLocaleDateString('sv-SE')
+
+/** Aplica só sugestões definidas, sem apagar escolhas já feitas. */
+export function mergeSuggestion(values, analysis) {
+  return {
+    ...values,
+    color: analysis?.color || values.color,
+    category: analysis?.category && analysis.category !== 'outros' ? analysis.category : values.category,
+    sensitive: values.sensitive || !!analysis?.sensitiveWarning,
+  }
+}
 const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/
 
 export function validateItemFields(v, dateKey) {
@@ -132,7 +142,7 @@ export function SuggestionBox({ analysis, onApply }) {
       <p className="flex items-center gap-2 font-semibold text-navy-900"><Sparkles className="size-4 text-flame-600" /> Sugestões a partir da foto</p>
       <p className="mt-1 text-muted">{analysis.note}</p>
       <ul className="mt-2 list-inside list-disc text-navy-900/80">
-        {analysis.characteristics.map((c) => <li key={c}>{c}</li>)}
+        {(analysis.characteristics || []).map((c) => <li key={c}>{c}</li>)}
       </ul>
       <button type="button" onClick={onApply} className="mt-3 text-sm font-semibold text-flame-600 underline">Aplicar cor e categoria sugeridas</button>
     </div>

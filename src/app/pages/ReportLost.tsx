@@ -58,7 +58,9 @@ export default function ReportLost() {
         </div>
         <section className="mt-10">
           <h2 className="flex items-center gap-2 text-xl font-bold text-navy-900"><Sparkles className="size-5 text-flame-600" /> Possíveis correspondências</h2>
-          {result.matches.length === 0 ? (
+          {result.matchesError ? (
+            <p className="mt-2 text-sm text-muted">Seu relato foi salvo, mas não foi possível buscar objetos parecidos agora. Confira depois em Procurar.</p>
+          ) : result.matches.length === 0 ? (
             <p className="mt-2 text-sm text-muted">Nenhum objeto parecido por enquanto. Volte a procurar nos próximos dias.</p>
           ) : (
             <div className="mt-4 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">

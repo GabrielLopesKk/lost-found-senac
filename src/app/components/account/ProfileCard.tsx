@@ -23,13 +23,14 @@ export default function ProfileCard() {
     setBusy(true)
     try {
       await updateMyProfile({ fullName, phone: digits })
-      await refreshProfile()
-      toast('Perfil atualizado.')
     } catch (err) {
       setError(err.message)
-    } finally {
       setBusy(false)
+      return
     }
+    toast('Perfil atualizado.')
+    try { await refreshProfile() } catch { toast('Perfil salvo, mas não foi possível atualizar a tela agora.', 'error') }
+    setBusy(false)
   }
 
   return (

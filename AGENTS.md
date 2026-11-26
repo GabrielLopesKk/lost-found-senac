@@ -33,3 +33,4 @@ use the editor.
 - Staff permission comes from `public.user_roles` via `is_staff()`, never from profile columns. Why: prevents privilege escalation.
 - Photo AI analysis runs in `src/app/ai/photo.functions.ts` (createServerFn + AI Gateway) with local color-analyzer fallback in `src/app/lib/analyzePhoto.tsx`; never place client-imported server fns under a `server/` folder (import protection blocks it).
 - Withdrawal codes are validated atomically by the database RPC; the panel normalizes pasted input, blocks overlapping submissions, and refreshes related SWR lists without replacing a committed success with a refresh error. Why: prevents duplicate handovers and misleading results.
+- List reads in `src/app/data/api.tsx` go through `fetchAllRows` (paged `.range()`), and UI actions report a saved change as saved even if the follow-up refresh fails. Why: avoids silently truncated lists and false failures that cause duplicates.

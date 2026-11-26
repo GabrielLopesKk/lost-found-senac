@@ -5,7 +5,7 @@ import { useSWRConfig } from 'swr'
 import { CircleCheck, EyeOff } from 'lucide-react'
 import { createFoundItem } from '../data/api'
 import { useAuth } from '../auth/AuthProvider'
-import { ItemFields, PhotoPicker, SuggestionBox, validateItemFields, todayISO } from '../components/forms'
+import { ItemFields, PhotoPicker, SuggestionBox, validateItemFields, todayISO, mergeSuggestion } from '../components/forms'
 import { FormError } from '../components/AuthCard'
 import { Button, Field, useToast } from '../components/ui'
 
@@ -24,12 +24,7 @@ export default function ReportFound() {
   const set = (k, v) => setValues((s) => ({ ...s, [k]: v }))
 
   function applySuggestion() {
-    setValues((s) => ({
-      ...s,
-      color: analysis.color || s.color,
-      category: analysis.category !== 'outros' ? analysis.category : s.category,
-      sensitive: s.sensitive || analysis.sensitiveWarning,
-    }))
+    setValues((s) => mergeSuggestion(s, analysis))
   }
 
   async function submit(e) {

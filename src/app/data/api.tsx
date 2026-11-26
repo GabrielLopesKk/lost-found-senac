@@ -9,6 +9,8 @@ import { daysSince, maskEmail, maskPhone, normalize } from '../lib/format'
 import { findMatches } from '../lib/matching'
 
 const SIGNED_URL_TTL = 60 * 60
+const PAGE_SIZE = 1000
+const SIGN_BATCH = 100
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 const PUBLIC_ITEM_COLS = 'id, ref, name, category, color, location, date_found, description, marks, status, photo_path, photo_hidden, created_at'
@@ -39,9 +41,21 @@ async function requireUserId() {
 async function signPhotos(paths) {
   const unique = [...new Set(paths.filter(Boolean))]
   if (!unique.length) return {}
-  const { data, error } = await supabase.storage.from(PHOTO_BUCKET).createSignedUrls(unique, SIGNED_URL_TTL)
-  if (error || !data) return {}
-  return Object.fromEntries(data.filter((d) => d.signedUrl).map((d) => [d.path, d.signedUrl]))
+  const batches = []
+  for (let i = 0; i < unique.length; i += SIGN_BATCH) batches.push(unique.slice(i, i + SIGN_BATCH))
+  const results = await Promise.all(batches.map((b) => supabase.storage.from(PHOTO_BUCKET).createSignedUrls(b, SIGNED_URL_TTL)))
+  return Object.fromEntries(results.flatMap(({ data, error }) => (error || !data ? [] : data.filter((d) => d.signedUrl).map((d) => [d.path, d.signedUrl]))))
+}
+
+/** Lê todas as páginas de uma consulta, sem cortar resultados no limite por requisição. */
+export async function fetchAllRows(buildQuery, fallback) {
+  const rows = []
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const { data, error } = await buildQuery().range(from, from + PAGE_SIZE - 1)
+    check(error, fallback)
+    rows.push(...(data || []))
+    if (!data || data.length < PAGE_SIZE) return rows
+  }
 }
 
 async function uploadPhoto(dataUrl) {
@@ -101,14 +115,15 @@ function toReport(row, urls = {}) {
 
 // ---------- Público ----------
 export async function listPublicItems({ q = '', category = '', color = '', location = '', from = '', to = '' } = {}) {
-  let query = supabase.from('public_items').select(PUBLIC_ITEM_COLS).order('date_found', { ascending: false }).limit(500)
-  if (category) query = query.eq('category', category)
-  if (color) query = query.eq('color', color)
-  if (location) query = query.eq('location', location)
-  if (from) query = query.gte('date_found', from)
-  if (to) query = query.lte('date_found', to)
-  const { data, error } = await query
-  check(error, 'Não foi possível carregar os objetos.')
+  const data = await fetchAllRows(() => {
+    let query = supabase.from('public_items').select(PUBLIC_ITEM_COLS).order('date_found', { ascending: false }).order('id')
+    if (category) query = query.eq('category', category)
+    if (color) query = query.eq('color', color)
+    if (location) query = query.eq('location', location)
+    if (from) query = query.gte('date_found', from)
+    if (to) query = query.lte('date_found', to)
+    return query
+  }, 'Não foi possível carregar os objetos.')
 
   // Busca textual sem acentos, feita aqui para aceitar "eletronico" = "eletrônico".
   const terms = normalize(q).split(/\s+/).filter(Boolean)
@@ -177,11 +192,14 @@ export async function createLostReport(data) {
   if (error) await removePhoto(photoPath)
   check(error, 'Não foi possível registrar o relato.')
 
-  // Sugestões usam somente dados públicos; nunca expõem contato de ninguém.
-  const pool = await listPublicItems()
-  const lost = { ...payload, dateLost: payload.date_lost }
-  const matches = findMatches(lost, pool, { min: 45, limit: 3 })
-  return { ...row, matches }
+  // O relato já foi salvo: falha nas sugestões não pode virar falha do cadastro.
+  try {
+    const pool = await listPublicItems()
+    const lost = { ...payload, dateLost: payload.date_lost }
+    return { ...row, matches: findMatches(lost, pool, { min: 45, limit: 3 }), matchesError: false }
+  } catch {
+    return { ...row, matches: [], matchesError: true }
+  }
 }
 
 export async function createClaim(itemId, { name, contactEmail, contactPhone, proof }) {
@@ -203,10 +221,10 @@ export async function createClaim(itemId, { name, contactEmail, contactPhone, pr
 
 export async function getMyProfile(userId) {
   const { data, error } = await supabase.from('profiles').select('id, full_name, phone').eq('id', userId).maybeSingle()
-  const { data: staff } = await supabase.rpc('is_staff')
-  if (data) data.role = staff ? 'staff' : 'user'
+  const { data: staff, error: staffError } = await supabase.rpc('is_staff')
   check(error, 'Não foi possível carregar seu perfil.')
-  return data ? { id: data.id, fullName: data.full_name, phone: data.phone, role: data.role } : null
+  check(staffError, 'Não foi possível verificar suas permissões.')
+  return data ? { id: data.id, fullName: data.full_name, phone: data.phone, role: staff ? 'staff' : 'user' } : null
 }
 
 export async function updateMyProfile({ fullName, phone }) {
@@ -219,8 +237,7 @@ export async function updateMyProfile({ fullName, phone }) {
 }
 
 export async function listMyClaims() {
-  const { data, error } = await supabase.rpc('my_claims')
-  check(error, 'Não foi possível carregar suas solicitações.')
+  const data = await fetchAllRows(() => supabase.rpc('my_claims'), 'Não foi possível carregar suas solicitações.')
   return data.map((c) => ({
     id: c.id,
     ref: c.ref,
@@ -253,8 +270,7 @@ export async function issuePickupCode(claimId) {
 
 export async function listMyReports() {
   const userId = await requireUserId()
-  const { data, error } = await supabase.from('lost_reports').select(REPORT_COLS).eq('user_id', userId).order('created_at', { ascending: false })
-  check(error, 'Não foi possível carregar seus relatos.')
+  const data = await fetchAllRows(() => supabase.from('lost_reports').select(REPORT_COLS).eq('user_id', userId).order('created_at', { ascending: false }).order('id'), 'Não foi possível carregar seus relatos.')
   const urls = await signPhotos(data.map((r) => r.photo_path))
   return data.map((r) => toReport(r, urls))
 }
@@ -271,8 +287,7 @@ export async function deleteMyReport(report) {
 
 export async function listMyFoundItems() {
   const userId = await requireUserId()
-  const { data, error } = await supabase.from('items').select(ITEM_COLS).eq('reported_by', userId).order('created_at', { ascending: false })
-  check(error, 'Não foi possível carregar seus registros.')
+  const data = await fetchAllRows(() => supabase.from('items').select(ITEM_COLS).eq('reported_by', userId).order('created_at', { ascending: false }).order('id'), 'Não foi possível carregar seus registros.')
   const urls = await signPhotos(data.map((r) => r.photo_path))
   return data.map((r) => toItem(r, urls))
 }
@@ -282,12 +297,13 @@ export async function listMyFoundItems() {
 const maskContact = (x) => ({ ...x, contactEmail: maskEmail(x.contactEmail), contactPhone: maskPhone(x.contactPhone) })
 
 export async function adminOverview() {
-  const [itemsRes, claimsRes, reportsRes] = await Promise.all([
-    supabase.from('items').select(ITEM_COLS).order('created_at', { ascending: false }).limit(1000),
-    supabase.from('claims').select(CLAIM_COLS).order('created_at', { ascending: false }).limit(1000),
-    supabase.from('lost_reports').select(REPORT_COLS).order('created_at', { ascending: false }).limit(1000),
+  const fail = 'Não foi possível carregar o painel.'
+  const [itemRows, claimRows, reportRows] = await Promise.all([
+    fetchAllRows(() => supabase.from('items').select(ITEM_COLS).order('created_at', { ascending: false }).order('id'), fail),
+    fetchAllRows(() => supabase.from('claims').select(CLAIM_COLS).order('created_at', { ascending: false }).order('id'), fail),
+    fetchAllRows(() => supabase.from('lost_reports').select(REPORT_COLS).order('created_at', { ascending: false }).order('id'), fail),
   ])
-  check(itemsRes.error || claimsRes.error || reportsRes.error, 'Não foi possível carregar o painel.')
+  const itemsRes = { data: itemRows }, claimsRes = { data: claimRows }, reportsRes = { data: reportRows }
 
   const urls = await signPhotos([...itemsRes.data, ...reportsRes.data].map((r) => r.photo_path))
   const rawItems = itemsRes.data.map((r) => toItem(r, urls))

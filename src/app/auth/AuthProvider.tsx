@@ -25,7 +25,7 @@ export function AuthProvider({ children }) {
   }, [])
 
   const userId = session?.user?.id
-  const { data: profile, mutate: refreshProfile } = useSWR(userId ? ['profile', userId] : null, () => getMyProfile(userId))
+  const { data: profile, error: profileError, mutate: refreshProfile } = useSWR(userId ? ['profile', userId] : null, () => getMyProfile(userId))
 
   const signOut = useCallback(async () => {
     await supabase.auth.signOut()
@@ -40,13 +40,14 @@ export function AuthProvider({ children }) {
       user: session?.user ?? null,
       profile: profile ?? null,
       isStaff: profile?.role === 'staff',
-      loading: session === undefined || (!!userId && profile === undefined),
+      loading: session === undefined || (!!userId && profile === undefined && !profileError),
+      profileError: profileError ?? null,
       recovery,
       clearRecovery: () => setRecovery(false),
       refreshProfile,
       signOut,
     }),
-    [session, profile, userId, recovery, refreshProfile, signOut],
+    [session, profile, profileError, userId, recovery, refreshProfile, signOut],
   )
 
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>

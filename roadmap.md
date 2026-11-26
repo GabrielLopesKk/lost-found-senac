@@ -1,4 +1,10 @@
 # Withdrawal validation repair
+
+## Bug review fixes
+- [x] Account loading shows an error with retry instead of loading forever.
+- [x] Saved lost reports, profiles and reception actions never show as failed when only the refresh/suggestions fail.
+- [x] Photo fallback no longer clears the chosen category.
+- [x] All lists (search, reception, my reports/items/claims) read every page instead of stopping at 500/1000.
 - [x] Reproduce and repair code normalization and database validation.
 - [x] Show every result, block duplicate submissions, and refresh related views.
 - [x] Test valid, malformed, missing, invalidated, expired, used, concurrent, and failure scenarios; remove test records.

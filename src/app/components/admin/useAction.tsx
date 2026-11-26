@@ -10,17 +10,23 @@ export function useAction(refresh) {
 
   async function run(key, fn, message) {
     setBusy(key)
+    let result
     try {
-      const result = await fn()
-      if (message) toast(message)
-      await refresh()
-      mutate((k) => Array.isArray(k) && k[0] === 'public')
-      return result
+      result = await fn()
     } catch (err) {
       toast(err.message, 'error')
+      setBusy(null)
+      return undefined
+    }
+    if (message) toast(message)
+    try {
+      await Promise.all([refresh(), mutate((k) => Array.isArray(k) && k[0] === 'public')])
+    } catch {
+      toast('Ação salva, mas não foi possível atualizar a lista agora. Recarregue para conferir.', 'error')
     } finally {
       setBusy(null)
     }
+    return result
   }
   return { busy, run }
 }
