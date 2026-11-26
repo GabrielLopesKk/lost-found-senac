@@ -53,4 +53,6 @@ export function AuthProvider({ children }) {
   return <AuthCtx.Provider value={value}>{children}</AuthCtx.Provider>
 }
 
-export const useAuth = () => useContext(AuthCtx)
+const FALLBACK = { session: null, user: null, profile: null, profileError: null, isStaff: false, loading: true, recovery: false, clearRecovery: () => {}, refreshProfile: async () => {}, signOut: async () => {} }
+// Falls back to a safe "loading" value if the provider is momentarily missing (e.g. after a hot reload).
+export const useAuth = () => useContext(AuthCtx) ?? FALLBACK
