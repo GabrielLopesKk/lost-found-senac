@@ -363,7 +363,9 @@ export async function rejectClaim(claimId) {
 
 /** Valida o código apresentado na recepção. Uso único: o objeto vira "Devolvido". */
 export async function validatePickupCode(input) {
-  const code = (input || '').trim().toUpperCase().replace(/[\s-]/g, '')
+  const raw = (input || '').trim().toUpperCase().replace(/\s+/g, '')
+  if (/^(PRD|OBJ)-?[A-Z0-9]{4,}$/.test(raw)) throw new Error('Esse é um número de protocolo, não o código de retirada. Peça ao dono o código de 8 caracteres mostrado em "Minha conta" (ex.: K7QM-4XPA).')
+  const code = raw.replace(/-/g, '')
   if (!/^[A-Z0-9]{8}$/.test(code)) throw new Error('O código deve ter 8 letras ou números (ex.: K7QM-4XPA).')
   const { data, error } = await supabase.rpc('validate_pickup_code', { p_code: code })
   check(error, 'Não foi possível validar o código.')
