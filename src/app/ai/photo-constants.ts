@@ -1,2 +1,27 @@
-export const CATEGORY_IDS: string[] = ["eletronicos", "documentos", "chaves", "garrafas", "roupas", "bolsas", "material", "acessorios", "outros"];
-export const COLOR_IDS: string[] = ["preto", "branco", "cinza", "azul", "vermelho", "verde", "amarelo", "laranja", "rosa", "roxo", "marrom", "bege", "prata", "multicolorido"];
+export const CATEGORY_IDS: string[] = [
+  "eletronicos",
+  "documentos",
+  "chaves",
+  "garrafas",
+  "roupas",
+  "bolsas",
+  "material",
+  "acessorios",
+  "outros",
+];
+export const COLOR_IDS: string[] = [
+  "preto",
+  "branco",
+  "cinza",
+  "azul",
+  "vermelho",
+  "verde",
+  "amarelo",
+  "laranja",
+  "rosa",
+  "roxo",
+  "marrom",
+  "bege",
+  "prata",
+  "multicolorido",
+];

@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Page from "@/app/pages/SignUp";
 
-
 export const Route = createFileRoute("/cadastro")({
   head: () => ({
     meta: [

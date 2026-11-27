@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Page from "@/app/pages/Login";
 
-
 export const Route = createFileRoute("/entrar")({
   head: () => ({
     meta: [

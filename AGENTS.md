@@ -29,7 +29,9 @@ use the editor.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
 
-- Ported v0 app lives in `src/app/` (pages/components as `// @ts-nocheck` TSX) and uses `src/app/lib/router-compat.tsx` for react-router-style APIs on TanStack Router; route files in `src/routes/` only wrap pages. Why: keeps the migrated code close to source.
+- The typed ported app lives in `src/app/`; route wrappers in `src/routes/` use TanStack Router, with compatibility components in `router-compat.tsx` and hooks in `router-hooks.ts`. Why: preserves the source experience without a second SPA runtime or unchecked TypeScript.
+- Keep contexts, hooks, validation helpers and component variants in separate modules from component exports. Why: enables reliable Fast Refresh and strict ESLint without hiding source errors.
+- Exclude platform-generated clients, route trees, model declarations and runtime caches from lint/format; keep all maintained source checked. Why: generated output is owned by the platform, not manually reformatted.
 - Staff permission comes from `public.user_roles` via `is_staff()`, never from profile columns. Why: prevents privilege escalation.
 - Photo AI analysis runs in `src/app/ai/photo.functions.ts` (createServerFn + AI Gateway) with local color-analyzer fallback in `src/app/lib/analyzePhoto.tsx`; never place client-imported server fns under a `server/` folder (import protection blocks it).
 - Withdrawal codes are validated atomically by the database RPC; the panel normalizes pasted input, blocks overlapping submissions, and refreshes related SWR lists without replacing a committed success with a refresh error. Why: prevents duplicate handovers and misleading results.

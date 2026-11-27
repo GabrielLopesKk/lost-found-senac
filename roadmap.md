@@ -1,5 +1,11 @@
 # Withdrawal validation repair
 
+## Dev archive stabilization
+- [x] Compare archive source, dependencies, runtime entries, schema and tests; retain only compatible improvements.
+- [x] Integrate typed modules and ESLint-safe contexts without changing runtime, database, or design.
+- [x] Run strict lint and 30 regression tests; verify signed-in account/reception, photo report CRUD and mobile search.
+- [x] Prepare reviewed changes for commit; no imported runtime, generated clients, credentials or repository metadata.
+
 ## Bug review fixes
 - [x] Account loading shows an error with retry instead of loading forever.
 - [x] Saved lost reports, profiles and reception actions never show as failed when only the refresh/suggestions fail.

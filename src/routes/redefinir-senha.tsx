@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Page from "@/app/pages/ResetPassword";
 
-
 export const Route = createFileRoute("/redefinir-senha")({
   head: () => ({
     meta: [

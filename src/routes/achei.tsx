@@ -13,5 +13,9 @@ export const Route = createFileRoute("/achei")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => <RequireAuth><Page /></RequireAuth>,
+  component: () => (
+    <RequireAuth>
+      <Page />
+    </RequireAuth>
+  ),
 });

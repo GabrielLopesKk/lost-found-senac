@@ -13,5 +13,9 @@ export const Route = createFileRoute("/admin")({
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
-  component: () => <RequireAuth staff><Page /></RequireAuth>,
+  component: () => (
+    <RequireAuth staff>
+      <Page />
+    </RequireAuth>
+  ),
 });

@@ -1,5 +1,6 @@
 [
  {"capability":"code","source":"Vite + React Router SPA","outcome":"ported to TanStack routes via src/app + router-compat","status":"verified","next_action":"none"},
+ {"capability":"dev archive stabilization","source":"-Lost-and-found-2.zip","outcome":"Typed app modules, isolated contexts/hooks/utilities/variants, guarded nullable state and structured RPC results adopted. Current TanStack runtime, database and design retained. Strict ESLint: zero errors/warnings; 30 tests pass; signed-in account/reception and photo report create/read/update/delete verified; mobile search checked.","status":"verified","next_action":"none"},
  {"capability":"schema","source":"supabase/schema.sql","outcome":"migrated to Lovable Cloud","status":"verified","next_action":"none"},
  {"capability":"authorization","source":"RLS + profiles.role","outcome":"RLS kept; staff role moved to user_roles","status":"verified","next_action":"promote staff by inserting into user_roles"},
  {"capability":"file storage","source":"item-photos bucket","outcome":"private bucket + policies recreated","status":"migrated","next_action":"photo files need export"},

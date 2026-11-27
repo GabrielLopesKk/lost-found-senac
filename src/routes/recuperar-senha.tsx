@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import Page from "@/app/pages/ForgotPassword";
 
-
 export const Route = createFileRoute("/recuperar-senha")({
   head: () => ({
     meta: [

@@ -1,5 +1,14 @@
-// @ts-nocheck
-export default function AuthCard({ eyebrow, title, subtitle, children, footer }) {
+import type { ReactNode } from "react";
+
+type AuthCardProps = {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  children: ReactNode;
+  footer?: ReactNode;
+};
+
+export default function AuthCard({ eyebrow, title, subtitle, children, footer }: AuthCardProps) {
   return (
     <div className="mx-auto flex max-w-md flex-col px-4 py-12 sm:py-16">
       <div className="card rise p-6 sm:p-8">
@@ -10,10 +19,17 @@ export default function AuthCard({ eyebrow, title, subtitle, children, footer })
       </div>
       {footer && <div className="mt-5 text-center text-sm text-muted">{footer}</div>}
     </div>
-  )
+  );
 }
 
-export function FormError({ children }) {
-  if (!children) return null
-  return <p role="alert" className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700">{children}</p>
+export function FormError({ children }: { children?: ReactNode }) {
+  if (!children) return null;
+  return (
+    <p
+      role="alert"
+      className="rounded-xl border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm font-medium text-red-700"
+    >
+      {children}
+    </p>
+  );
 }

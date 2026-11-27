@@ -87,10 +87,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "Achados e Perdidos · Senac Canoas" },
-      { name: "description", content: "Achados e Perdidos do Senac Canoas: encontre, registre e recupere objetos no campus." },
+      {
+        name: "description",
+        content:
+          "Achados e Perdidos do Senac Canoas: encontre, registre e recupere objetos no campus.",
+      },
       { name: "author", content: "Lovable" },
       { property: "og:title", content: "Achados e Perdidos · Senac Canoas" },
-      { property: "og:description", content: "Encontre, registre e recupere objetos no campus do Senac Canoas." },
+      {
+        property: "og:description",
+        content: "Encontre, registre e recupere objetos no campus do Senac Canoas.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
